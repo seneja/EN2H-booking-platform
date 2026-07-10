@@ -37,14 +37,7 @@ export const Sidebar = () => {
 
   const SidebarContent = () => (
     <>
-      <div className="sidebar__logo">
-        <div className="sidebar__logo-icon">
-          <Heart size={20} fill="white" />
-        </div>
-        {!collapsed && <span className="sidebar__logo-text">MediBook</span>}
-      </div>
-
-      <nav className="sidebar__nav">
+      <nav className="sidebar__nav" style={{ paddingTop: '50px' }}>
         {navItems.map((item) => (
           <Link
             key={item.to}

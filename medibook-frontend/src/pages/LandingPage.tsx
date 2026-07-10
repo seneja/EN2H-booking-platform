@@ -19,6 +19,7 @@ import { PublicLayout } from '../components/layout/PublicLayout';
 import { servicesService } from '../services/medibook.service';
 import { MOCK_SERVICES } from '../services/mockData';
 import type { Service } from '../types';
+import heroIllustration from '../assets/hero_illustration.png';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   dental: <Smile size={28} />,
@@ -109,7 +110,7 @@ export const LandingPage = () => {
             </h1>
             <p className="hero__subtitle">
               Connect with trusted healthcare services and schedule your appointment
-              quickly and conveniently — all in one place.
+              quickly and conveniently - all in one place.
             </p>
             <div className="hero__actions">
               <Link to="/book" className="btn btn--primary btn--lg">
@@ -120,9 +121,7 @@ export const LandingPage = () => {
                 Explore Services
                 <ArrowRight size={18} />
               </Link>
-              <Link to="/login" className="btn btn--outline btn--lg" style={{ backgroundColor: '#f1f5f9', color: '#1e293b' }}>
-                Admin Login
-              </Link>
+
             </div>
             <div className="hero__social-proof">
               <div className="hero__avatars">
@@ -141,14 +140,22 @@ export const LandingPage = () => {
                 <p className="text-xs text-muted">Dental Consultation • 9:00 AM</p>
               </div>
             </div>
-            <div className="hero__illustration">
-              <div className="hero__illustration-bg">
-                <Heart size={80} className="hero__illustration-icon" />
-              </div>
-              <div className="hero__stats-ring">
-                <Activity size={40} />
-              </div>
+
+            <div className="hero__illustration" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', boxShadow: 'none' }}>
+              <img
+                src={heroIllustration}
+                alt="Healthcare Appointment"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: '380px',
+                  borderRadius: '24px',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                  border: '6px solid #fff'
+                }}
+              />
             </div>
+
             <div className="hero__card-float hero__card-float--2">
               <Star size={18} className="text-warning" fill="currentColor" />
               <div>
@@ -245,6 +252,6 @@ export const LandingPage = () => {
           </div>
         </div>
       </section>
-    </PublicLayout>
+    </PublicLayout >
   );
 };

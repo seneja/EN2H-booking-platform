@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -16,10 +17,8 @@ export const PublicNavbar = () => {
   return (
     <nav className="public-nav">
       <div className="public-nav__inner container">
-        <Link to="/" className="public-nav__logo">
-          <div className="public-nav__logo-icon">
-            <Heart size={18} fill="white" />
-          </div>
+        <Link to="/" className="public-nav__logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src={logoImg} alt="MediBook Logo" style={{ height: '40px', width: 'auto', borderRadius: '4px' }} />
           <span>MediBook</span>
         </Link>
 
@@ -56,10 +55,8 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
       <footer className="footer">
         <div className="container footer__inner">
           <div className="footer__brand">
-            <div className="footer__logo">
-              <div className="footer__logo-icon">
-                <Heart size={16} fill="white" />
-              </div>
+            <div className="footer__logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img src={logoImg} alt="MediBook Logo" style={{ height: '32px', width: 'auto', borderRadius: '4px' }} />
               <span>MediBook</span>
             </div>
             <p className="footer__tagline">

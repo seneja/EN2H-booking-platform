@@ -45,7 +45,14 @@ export const BookingsPage = () => {
     setError('');
     try {
       const res = await bookingsService.getAll();
-      const data = Array.isArray(res.data) ? res.data : [];
+      let data: Booking[] = [];
+      if (res.data) {
+        if (Array.isArray(res.data)) {
+          data = res.data;
+        } else if (res.data.data && Array.isArray(res.data.data)) {
+          data = res.data.data;
+        }
+      }
       if (data.length > 0) setBookings(data);
     } catch {
       // keep mock

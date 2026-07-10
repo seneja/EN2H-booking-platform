@@ -55,7 +55,14 @@ export const DashboardPage = () => {
           bookingsService.getAll({ limit: 5 }),
         ]);
         setStats(statsRes.data);
-        const bData = Array.isArray(bookingsRes.data) ? bookingsRes.data : [];
+        let bData: Booking[] = [];
+        if (bookingsRes.data) {
+          if (Array.isArray(bookingsRes.data)) {
+            bData = bookingsRes.data;
+          } else if (bookingsRes.data.data && Array.isArray(bookingsRes.data.data)) {
+            bData = bookingsRes.data.data;
+          }
+        }
         if (bData.length > 0) setRecentBookings(bData);
       } catch {
         // Keep mock data
