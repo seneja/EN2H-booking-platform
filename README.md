@@ -1,481 +1,132 @@
 # MediBook – Healthcare Appointment Management Platform
 
-MediBook is a modern healthcare appointment management platform that allows patients to browse healthcare services and create appointments while enabling administrators to manage services and booking statuses efficiently.
-
-The system is built using a **NestJS + TypeORM backend** with **PostgreSQL database support** and a **React + TypeScript frontend** providing a responsive user interface and admin dashboard.
+MediBook is a modern, responsive, and robust healthcare appointment booking platform. The project is split into a **NestJS + TypeORM backend** (`en2h-booking-platform`) and a **React + TypeScript + Vite frontend** (`medibook-frontend`).
 
 ---
 
-# Features
+##  Project Structure
 
-## Patient Features
-
-* Browse available healthcare services
-* View service details including duration and price
-* Create healthcare appointments
-* Receive booking confirmation status
-* Responsive user-friendly interface
-
-## Admin Features
-
-* Secure JWT-based authentication
-* Admin registration and login
-* Manage healthcare services
-
-  * Create services
-  * View services
-  * Update services
-  * Delete services
-* Manage appointments
-
-  * View bookings
-  * Update booking status
-  * Confirm, cancel, or complete appointments
-
-## Backend Features
-
-* RESTful API architecture
-* JWT authentication and authorization
-* PostgreSQL database integration
-* TypeORM entity management
-* Swagger API documentation
-* Data validation
-* Secure password hashing
+* **`en2h-booking-platform/`**: NestJS backend REST API with PostgreSQL/SQLite database support, JWT authorization, and Swagger documentation.
+* **`medibook-frontend/`**: React frontend SPA implementing patient booking screens and a sleek admin dashboard to manage services and client appointments.
 
 ---
 
-# Technology Stack
+##Environment Variables
 
-## Backend
-
-* NestJS
-* TypeScript
-* TypeORM
-* PostgreSQL
-* JWT Authentication
-* Swagger
-
-## Frontend
-
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-
-## Database
-
-* PostgreSQL
-
----
-
-# Project Structure
-
-```
-MediBook
-│
-├── en2h-booking-platform
-│   ├── src
-│   │   ├── auth
-│   │   ├── users
-│   │   ├── services
-│   │   ├── bookings
-│   │   └── app.module.ts
-│   │
-│   └── .env
-│
-└── medibook-frontend
-    ├── src
-    ├── components
-    ├── pages
-    └── vite.config.ts
-```
-
----
-
-# Backend Setup
-
-## 1. Clone Repository
-
-```bash
-git clone <repository-url>
-```
-
-Navigate into the backend:
-
-```bash
-cd en2h-booking-platform
-```
-
----
-
-# Environment Configuration
-
-Create a `.env` file inside the backend directory.
+The backend requires configuration variables to run. Create a `.env` file inside the `en2h-booking-platform` directory:
 
 ```env
-# Database Configuration
+# ─── Database ────────────────────────────────────────────────────
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
-DB_PASSWORD=your_password
+DB_PASSWORD="your_postgres_password"  # Wrap in quotes if it contains '#' characters!
 DB_NAME=medibook
 
-
-# JWT Configuration
+# ─── JWT Authentication ──────────────────────────────────────────
 JWT_SECRET=medibook-super-secret-jwt-key
 JWT_EXPIRES_IN=7d
 
-
-# Application Configuration
+# ─── App Configuration ───────────────────────────────────────────
 PORT=3000
 ```
 
----
-
-# Database Setup
-
-## PostgreSQL Setup
-
-Make sure PostgreSQL is running.
-
-Create the database:
-
-```sql
-CREATE DATABASE medibook;
-```
-
-Update your `.env` file with your PostgreSQL credentials.
-
-Example:
-
-```
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=medibook
-```
-
-The application uses TypeORM synchronization during development:
-
-```typescript
-synchronize: true
-```
-
-Therefore, database tables will automatically be created when the backend starts.
-
-Generated tables:
-
-* users
-* services
-* bookings
+*Note: In development, the React frontend is configured to proxy all `/api` requests to port `3000` via its Vite server configuration (`vite.config.ts`).*
 
 ---
 
-# Install Dependencies
+## Database Setup
 
-Inside backend folder:
+### Option A: PostgreSQL (Recommended)
+1. Ensure your PostgreSQL server is running locally on port `5432`.
+2. Create a database named `medibook` using your SQL client (e.g. pgAdmin, psql, DBeaver):
+   ```sql
+   CREATE DATABASE medibook;
+   ```
+3. Update `DB_PASSWORD` in your backend `.env` file. If your password contains a `#` (hash) character, **you must wrap the password in double quotes** (`"password#123"`) so the parser doesn't treat the rest of your password as a code comment.
+4. The backend uses TypeORM `synchronize: true` in development, which automatically generates all tables (`users`, `services`, `bookings`) on startup.
 
+### Option B: SQLite Fallback
+If you do not have PostgreSQL set up on your machine, you can run the app using a zero-setup SQLite database:
+1. Open `en2h-booking-platform/src/app.module.ts`.
+2. Switch `TypeOrmModule.forRoot` from type `'postgres'` to type `'better-sqlite3'`:
+   ```typescript
+   TypeOrmModule.forRoot({
+     type: 'better-sqlite3',
+     database: 'medibook.sqlite',
+     autoLoadEntities: true,
+     synchronize: true,
+   })
+   ```
+
+---
+
+## Installation & Running the Application
+
+### 1. Start the Backend API
 ```bash
+cd en2h-booking-platform
 npm install
-```
-
----
-
-# Run Backend Server
-
-Development mode:
-
-```bash
 npm run start:dev
 ```
+*The API will be available at: **http://localhost:3000***
 
-Backend will run at:
-
-```
-http://localhost:3000
-```
-
----
-
-# Frontend Setup
-
-Navigate to frontend:
-
+### 2. Start the Frontend Application
 ```bash
 cd medibook-frontend
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Run frontend:
-
-```bash
 npm run dev
 ```
-
-Frontend will run at:
-
-```
-http://localhost:5173
-```
+*The frontend interface will be available at: **http://localhost:5173***
 
 ---
 
-# API Documentation (Swagger)
+## Running Migrations
 
-MediBook provides interactive Swagger documentation.
+TypeORM is configured to generate database tables automatically on startup (`synchronize: true`). If you disable this setting in production and need to run migrations:
 
-Access:
-
-```
-http://localhost:3000/api/docs
-```
-
-Swagger allows you to:
-
-* Test API endpoints
-* View request/response formats
-* Authenticate using JWT
-* Manage services and bookings
-
----
-
-# Authentication Testing
-
-## 1. Register Admin Account
-
-Endpoint:
-
-```
-POST /auth/register
-```
-
-Request:
-
-```json
-{
-  "email": "admin@gmail.com",
-  "password": "password123",
-  "name": "Admin User"
-}
-```
+1. Generate a migration based on schema changes:
+   ```bash
+   npx typeorm-ts-node-commonjs migration:generate src/migrations/InitialMigration -d src/data-source.ts
+   ```
+2. Run pending migrations:
+   ```bash
+   npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts
+   ```
+3. Revert the last run migration:
+   ```bash
+   npx typeorm-ts-node-commonjs migration:revert -d src/data-source.ts
+   ```
 
 ---
 
-## 2. Login
+## API Documentation (Swagger)
 
-Endpoint:
+The backend provides fully interactive API documentation built with Swagger UI:
 
-```
-POST /auth/login
-```
+👉 **[http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
 
-Request:
-
-```json
-{
-  "email": "admin@gmail.com",
-  "password": "password123"
-}
-```
-
-Response:
-
-```json
-{
-  "access_token": "JWT_TOKEN"
-}
-```
+### Testing Protected Routes in Swagger:
+1. Expand the `POST /auth/login` endpoint, click **Try it out**, enter your registered credentials, and click **Execute**.
+2. Copy the `accessToken` from the response.
+3. Click the green **Authorize** lock button at the top right of the Swagger UI page.
+4. Paste the token into the value box, click **Authorize**, and click close.
+5. All protected endpoints (displaying a lock icon) will now include the Bearer Authorization header in requests!
 
 ---
 
-## 3. Authorize Swagger
+## Assumptions Made
 
-1. Copy the JWT token
-2. Click the **Authorize 🔒** button
-3. Enter:
-
-```
-Bearer JWT_TOKEN
-```
-
-4. Click Authorize
-
-Protected endpoints can now be tested.
+1. **Authentication Scope**: Patients browsing services and creating appointments do so without requiring login authentication. Only healthcare staff/administrators require JWT credentials to manage services and edit booking statuses.
+2. **Default Admin User**: When the SQLite or PostgreSQL database starts up empty, the administrator must first navigate to `/register` in the UI to create their account.
+3. **Database Casing**: TypeORM is configured to map entity names in camelCase. PostgreSQL converts column names to lowercase by default, so double quotes are configured in query parameters (e.g. `"createdAt"`) to preserve TS properties.
+4. **Environment Variables Fallback**: Built-in default fallbacks are provided for variables (such as the JWT secret and database host) to ensure the application starts up smoothly even if a `.env` file is missing.
 
 ---
 
-# API Endpoints
+## Future Improvements
 
-## Authentication
-
-| Method | Endpoint       | Description                |
-| ------ | -------------- | -------------------------- |
-| POST   | /auth/register | Create admin account       |
-| POST   | /auth/login    | Login and receive JWT      |
-| GET    | /auth/profile  | Get logged-in user profile |
-
----
-
-## Services
-
-| Method | Endpoint      | Description       |
-| ------ | ------------- | ----------------- |
-| POST   | /services     | Create service    |
-| GET    | /services     | Get all services  |
-| GET    | /services/:id | Get service by ID |
-| PATCH  | /services/:id | Update service    |
-| DELETE | /services/:id | Delete service    |
-
-Example service:
-
-```json
-{
-  "title": "General Doctor Consultation",
-  "description": "Consultation with a general physician",
-  "duration": 30,
-  "price": 2500,
-  "isActive": true
-}
-```
-
----
-
-## Bookings
-
-| Method | Endpoint             | Description           |
-| ------ | -------------------- | --------------------- |
-| POST   | /bookings            | Create booking        |
-| GET    | /bookings            | View all bookings     |
-| PATCH  | /bookings/:id/status | Update booking status |
-
-Booking status options:
-
-```
-PENDING
-CONFIRMED
-CANCELLED
-COMPLETED
-```
-
-Example:
-
-```json
-{
-  "customerName": "John Silva",
-  "customerEmail": "john@gmail.com",
-  "customerPhone": "0771234567",
-  "serviceId": "service_uuid",
-  "bookingDate": "2026-07-15",
-  "bookingTime": "10:30",
-  "notes": "First consultation"
-}
-```
-
----
-
-# Database Schema
-
-## Users Table
-
-```
-id
-email
-password
-name
-createdAt
-```
-
-## Services Table
-
-```
-id
-title
-description
-duration
-price
-isActive
-createdAt
-updatedAt
-```
-
-## Bookings Table
-
-```
-id
-customerName
-customerEmail
-customerPhone
-serviceId
-bookingDate
-bookingTime
-status
-notes
-createdAt
-updatedAt
-```
-
----
-
-# Future Improvements
-
-## Email and SMS Notifications
-
-Integrate services such as:
-
-* SendGrid
-* Twilio
-
-for:
-
-* Booking confirmations
-* Appointment reminders
-* Status updates
-
----
-
-## Advanced Appointment Scheduling
-
-Implement:
-
-* Doctor availability management
-* Time-slot allocation
-* Prevention of duplicate bookings
-
----
-
-## Role-Based Access Control
-
-Introduce roles such as:
-
-* Super Admin
-* Doctor
-* Receptionist
-
-with different dashboard permissions.
-
----
-
-## OAuth Authentication
-
-Add:
-
-* Google Login
-* Microsoft Login
-
-for easier staff onboarding.
-
----
-
-# Author
-
-Developed as a healthcare appointment management platform using modern full-stack technologies.
-
----
-
-# License
-
-This project is developed for educational and demonstration purposes.
+1. **Email & SMS Notifications**: Integrate email services (e.g., SendGrid) or SMS integrations (e.g., Twilio) to automatically send booking confirmations, status changes (confirmed/cancelled), and daily slot reminders to patients.
+2. **Advanced Slot Allocation**: Implement checking for double-bookings on a specific provider or service slot to ensure a single therapist/doctor cannot be booked twice at the same time.
+3. **Role-Based Access Control (RBAC)**: Expand user schemas to support distinct privilege roles (e.g. `SuperAdmin`, `Doctor`, `Receptionist`) with customized dashboard views.
+4. **OAuth Social Logins**: Provide simple Google or Microsoft single sign-on (SSO) options for quick staff onboarding.
