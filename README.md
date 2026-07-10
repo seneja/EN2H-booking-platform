@@ -1,98 +1,481 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# MediBook – Healthcare Appointment Management Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+MediBook is a modern healthcare appointment management platform that allows patients to browse healthcare services and create appointments while enabling administrators to manage services and booking statuses efficiently.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The system is built using a **NestJS + TypeORM backend** with **PostgreSQL database support** and a **React + TypeScript frontend** providing a responsive user interface and admin dashboard.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Features
 
-## Project setup
+## Patient Features
 
-```bash
-$ npm install
+* Browse available healthcare services
+* View service details including duration and price
+* Create healthcare appointments
+* Receive booking confirmation status
+* Responsive user-friendly interface
+
+## Admin Features
+
+* Secure JWT-based authentication
+* Admin registration and login
+* Manage healthcare services
+
+  * Create services
+  * View services
+  * Update services
+  * Delete services
+* Manage appointments
+
+  * View bookings
+  * Update booking status
+  * Confirm, cancel, or complete appointments
+
+## Backend Features
+
+* RESTful API architecture
+* JWT authentication and authorization
+* PostgreSQL database integration
+* TypeORM entity management
+* Swagger API documentation
+* Data validation
+* Secure password hashing
+
+---
+
+# Technology Stack
+
+## Backend
+
+* NestJS
+* TypeScript
+* TypeORM
+* PostgreSQL
+* JWT Authentication
+* Swagger
+
+## Frontend
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+
+## Database
+
+* PostgreSQL
+
+---
+
+# Project Structure
+
+```
+MediBook
+│
+├── en2h-booking-platform
+│   ├── src
+│   │   ├── auth
+│   │   ├── users
+│   │   ├── services
+│   │   ├── bookings
+│   │   └── app.module.ts
+│   │
+│   └── .env
+│
+└── medibook-frontend
+    ├── src
+    ├── components
+    ├── pages
+    └── vite.config.ts
 ```
 
-## Compile and run the project
+---
+
+# Backend Setup
+
+## 1. Clone Repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <repository-url>
 ```
 
-## Run tests
+Navigate into the backend:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cd en2h-booking-platform
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# Environment Configuration
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Create a `.env` file inside the backend directory.
+
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_NAME=medibook
+
+
+# JWT Configuration
+JWT_SECRET=medibook-super-secret-jwt-key
+JWT_EXPIRES_IN=7d
+
+
+# Application Configuration
+PORT=3000
+```
+
+---
+
+# Database Setup
+
+## PostgreSQL Setup
+
+Make sure PostgreSQL is running.
+
+Create the database:
+
+```sql
+CREATE DATABASE medibook;
+```
+
+Update your `.env` file with your PostgreSQL credentials.
+
+Example:
+
+```
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_NAME=medibook
+```
+
+The application uses TypeORM synchronization during development:
+
+```typescript
+synchronize: true
+```
+
+Therefore, database tables will automatically be created when the backend starts.
+
+Generated tables:
+
+* users
+* services
+* bookings
+
+---
+
+# Install Dependencies
+
+Inside backend folder:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+# Run Backend Server
 
-Check out a few resources that may come in handy when working with NestJS:
+Development mode:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run start:dev
+```
 
-## Support
+Backend will run at:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+http://localhost:3000
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Frontend Setup
 
-## License
+Navigate to frontend:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+cd medibook-frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
+
+Frontend will run at:
+
+```
+http://localhost:5173
+```
+
+---
+
+# API Documentation (Swagger)
+
+MediBook provides interactive Swagger documentation.
+
+Access:
+
+```
+http://localhost:3000/api/docs
+```
+
+Swagger allows you to:
+
+* Test API endpoints
+* View request/response formats
+* Authenticate using JWT
+* Manage services and bookings
+
+---
+
+# Authentication Testing
+
+## 1. Register Admin Account
+
+Endpoint:
+
+```
+POST /auth/register
+```
+
+Request:
+
+```json
+{
+  "email": "admin@gmail.com",
+  "password": "password123",
+  "name": "Admin User"
+}
+```
+
+---
+
+## 2. Login
+
+Endpoint:
+
+```
+POST /auth/login
+```
+
+Request:
+
+```json
+{
+  "email": "admin@gmail.com",
+  "password": "password123"
+}
+```
+
+Response:
+
+```json
+{
+  "access_token": "JWT_TOKEN"
+}
+```
+
+---
+
+## 3. Authorize Swagger
+
+1. Copy the JWT token
+2. Click the **Authorize 🔒** button
+3. Enter:
+
+```
+Bearer JWT_TOKEN
+```
+
+4. Click Authorize
+
+Protected endpoints can now be tested.
+
+---
+
+# API Endpoints
+
+## Authentication
+
+| Method | Endpoint       | Description                |
+| ------ | -------------- | -------------------------- |
+| POST   | /auth/register | Create admin account       |
+| POST   | /auth/login    | Login and receive JWT      |
+| GET    | /auth/profile  | Get logged-in user profile |
+
+---
+
+## Services
+
+| Method | Endpoint      | Description       |
+| ------ | ------------- | ----------------- |
+| POST   | /services     | Create service    |
+| GET    | /services     | Get all services  |
+| GET    | /services/:id | Get service by ID |
+| PATCH  | /services/:id | Update service    |
+| DELETE | /services/:id | Delete service    |
+
+Example service:
+
+```json
+{
+  "title": "General Doctor Consultation",
+  "description": "Consultation with a general physician",
+  "duration": 30,
+  "price": 2500,
+  "isActive": true
+}
+```
+
+---
+
+## Bookings
+
+| Method | Endpoint             | Description           |
+| ------ | -------------------- | --------------------- |
+| POST   | /bookings            | Create booking        |
+| GET    | /bookings            | View all bookings     |
+| PATCH  | /bookings/:id/status | Update booking status |
+
+Booking status options:
+
+```
+PENDING
+CONFIRMED
+CANCELLED
+COMPLETED
+```
+
+Example:
+
+```json
+{
+  "customerName": "John Silva",
+  "customerEmail": "john@gmail.com",
+  "customerPhone": "0771234567",
+  "serviceId": "service_uuid",
+  "bookingDate": "2026-07-15",
+  "bookingTime": "10:30",
+  "notes": "First consultation"
+}
+```
+
+---
+
+# Database Schema
+
+## Users Table
+
+```
+id
+email
+password
+name
+createdAt
+```
+
+## Services Table
+
+```
+id
+title
+description
+duration
+price
+isActive
+createdAt
+updatedAt
+```
+
+## Bookings Table
+
+```
+id
+customerName
+customerEmail
+customerPhone
+serviceId
+bookingDate
+bookingTime
+status
+notes
+createdAt
+updatedAt
+```
+
+---
+
+# Future Improvements
+
+## Email and SMS Notifications
+
+Integrate services such as:
+
+* SendGrid
+* Twilio
+
+for:
+
+* Booking confirmations
+* Appointment reminders
+* Status updates
+
+---
+
+## Advanced Appointment Scheduling
+
+Implement:
+
+* Doctor availability management
+* Time-slot allocation
+* Prevention of duplicate bookings
+
+---
+
+## Role-Based Access Control
+
+Introduce roles such as:
+
+* Super Admin
+* Doctor
+* Receptionist
+
+with different dashboard permissions.
+
+---
+
+## OAuth Authentication
+
+Add:
+
+* Google Login
+* Microsoft Login
+
+for easier staff onboarding.
+
+---
+
+# Author
+
+Developed as a healthcare appointment management platform using modern full-stack technologies.
+
+---
+
+# License
+
+This project is developed for educational and demonstration purposes.
