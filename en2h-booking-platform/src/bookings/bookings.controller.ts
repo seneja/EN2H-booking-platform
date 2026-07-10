@@ -6,11 +6,13 @@ import {
   Body,
   Param,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
+import { GetBookingsQueryDto } from './dto/get-bookings-query.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('bookings')
@@ -25,8 +27,8 @@ export class BookingsController {
   @Get() // Protected route to get all bookings
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  findAll() {
-    return this.bookingsService.findAll();
+  findAll(@Query() query: GetBookingsQueryDto) {
+    return this.bookingsService.findAll(query);
   }
 
   @Get(':id') // Protected route to get booking details

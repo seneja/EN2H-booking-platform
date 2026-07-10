@@ -50,10 +50,12 @@ export class AuthService {
 
     const payload = { sub: user.id, email: user.email };
     const access_token = this.jwtService.sign(payload);
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '30d' });
 
-    // Return snake_case "access_token" – matches what the frontend expects
+    // Return access_token, refresh_token and user info
     return {
       access_token,
+      refresh_token,
       user: {
         id: user.id,
         email: user.email,
@@ -61,5 +63,26 @@ export class AuthService {
         role: 'admin',   // all registered users are admins for now
       },
     };
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken);
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      const newPayload = { sub: user.id, email: user.email };
+      const access_token = this.jwtService.sign(newPayload);
+      const refresh_token = this.jwtService.sign(newPayload, { expiresIn: '30d' });
+
+      return {
+        access_token,
+        refresh_token,
+      };
+    } catch {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
   }
 }

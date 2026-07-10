@@ -61,11 +61,42 @@ export class BookingsService {
     return this.findOne(saved.id);
   }
 
-  async findAll(): Promise<Booking[]> {
-    return this.bookingsRepository.find({
-      relations: { service: true },
-      order: { createdAt: 'DESC' },
-    });
+  async findAll(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: BookingStatus;
+  }): Promise<{ data: Booking[]; total: number; page: number; limit: number }> {
+    const page = Math.max(1, query.page || 1);
+    const limit = Math.max(1, Math.min(100, query.limit || 10));
+    const skip = (page - 1) * limit;
+
+    const qb = this.bookingsRepository.createQueryBuilder('booking')
+      .leftJoinAndSelect('booking.service', 'service');
+
+    if (query.status) {
+      qb.andWhere('booking.status = :status', { status: query.status });
+    }
+
+    if (query.search) {
+      qb.andWhere(
+        '(LOWER(booking.customerName) LIKE :search OR LOWER(booking.customerEmail) LIKE :search OR LOWER(booking.customerPhone) LIKE :search)',
+        { search: `%${query.search.toLowerCase()}%` },
+      );
+    }
+
+    qb.orderBy('booking.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
   async findOne(id: string): Promise<Booking> {
