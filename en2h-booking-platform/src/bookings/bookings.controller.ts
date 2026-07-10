@@ -38,7 +38,7 @@ export class BookingsController {
     return this.bookingsService.findOne(id);
   }
 
-  @Patch(':id/status') // Protected route to update booking status/cancel
+  @Patch(':id/status') // Protected route to update booking status
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   updateStatus(
@@ -46,5 +46,12 @@ export class BookingsController {
     @Body() dto: UpdateBookingStatusDto,
   ) {
     return this.bookingsService.updateStatus(id, dto);
+  }
+
+  @Patch(':id/cancel') // Protected route to cancel booking
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  cancel(@Param('id') id: string) {
+    return this.bookingsService.cancel(id);
   }
 }
