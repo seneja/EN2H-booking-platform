@@ -1,116 +1,31 @@
-# MediBook – Healthcare Appointment Management Platform
+# MediBook API (Backend)
 
-MediBook is a modern healthcare appointment management platform that allows patients to browse healthcare services and create appointments while enabling administrators to manage services and booking statuses efficiently.
+## Project Overview
 
-The system is built using a **NestJS + TypeORM backend** with **PostgreSQL database support** and a **React + TypeScript frontend** providing a responsive user interface and admin dashboard.
+MediBook is a robust healthcare appointment management platform. This repository contains the backend service built with **NestJS**, **TypeScript**, and **PostgreSQL**. It provides a RESTful API for patients to browse healthcare services and create bookings, and for administrators to manage services and monitor booking statuses efficiently.
 
----
-
-# Features
-
-## Patient Features
-
-* Browse available healthcare services
-* View service details including duration and price
-* Create healthcare appointments
-* Receive booking confirmation status
-* Responsive user-friendly interface
-
-## Admin Features
-
-* Secure JWT-based authentication
-* Admin registration and login
-* Manage healthcare services
-
-  * Create services
-  * View services
-  * Update services
-  * Delete services
-* Manage appointments
-
-  * View bookings
-  * Update booking status
-  * Confirm, cancel, or complete appointments
-
-## Backend Features
-
-* RESTful API architecture
-* JWT authentication and authorization
-* PostgreSQL database integration
-* TypeORM entity management
-* Swagger API documentation
-* Data validation
-* Secure password hashing
+Key features include JWT-based authentication, validation, centralized error handling, and swagger-based API documentation.
 
 ---
 
-# Technology Stack
+## Installation Steps
 
-## Backend
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd en2h-booking-platform
+   ```
 
-* NestJS
-* TypeScript
-* TypeORM
-* PostgreSQL
-* JWT Authentication
-* Swagger
-
-## Frontend
-
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-
-## Database
-
-* PostgreSQL
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
 ---
 
-# Project Structure
+## Environment Variables
 
-```
-MediBook
-│
-├── en2h-booking-platform
-│   ├── src
-│   │   ├── auth
-│   │   ├── users
-│   │   ├── services
-│   │   ├── bookings
-│   │   └── app.module.ts
-│   │
-│   └── .env
-│
-└── medibook-frontend
-    ├── src
-    ├── components
-    ├── pages
-    └── vite.config.ts
-```
-
----
-
-# Backend Setup
-
-## 1. Clone Repository
-
-```bash
-git clone <repository-url>
-```
-
-Navigate into the backend:
-
-```bash
-cd en2h-booking-platform
-```
-
----
-
-# Environment Configuration
-
-Create a `.env` file inside the backend directory.
+Create a `.env` file in the root of the project. Use the following template:
 
 ```env
 # Database Configuration
@@ -120,11 +35,9 @@ DB_USERNAME=postgres
 DB_PASSWORD=your_password
 DB_NAME=medibook
 
-
 # JWT Configuration
-JWT_SECRET=medibook-super-secret-jwt-key
+JWT_SECRET=medibook-super-secret-jwt-key-change-in-production
 JWT_EXPIRES_IN=7d
-
 
 # Application Configuration
 PORT=3000
@@ -132,350 +45,96 @@ PORT=3000
 
 ---
 
-# Database Setup
+## Database Setup
 
-## PostgreSQL Setup
-
-Make sure PostgreSQL is running.
-
-Create the database:
-
-```sql
-CREATE DATABASE medibook;
-```
-
-Update your `.env` file with your PostgreSQL credentials.
-
-Example:
-
-```
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=medibook
-```
-
-The application uses TypeORM synchronization during development:
-
-```typescript
-synchronize: true
-```
-
-Therefore, database tables will automatically be created when the backend starts.
-
-Generated tables:
-
-* users
-* services
-* bookings
-
----
-
-# Install Dependencies
-
-Inside backend folder:
+### Option 1: Using Docker (Recommended)
+You can quickly spin up the PostgreSQL database and the API using the provided `docker-compose.yml` file.
 
 ```bash
-npm install
+docker-compose up -d db
 ```
+*(This starts the PostgreSQL database in the background on port 5432.)*
+
+### Option 2: Local PostgreSQL Installation
+Make sure you have PostgreSQL installed and running on your machine.
+1. Open your PostgreSQL terminal (psql) or pgAdmin.
+2. Create the database:
+   ```sql
+   CREATE DATABASE medibook;
+   ```
+3. Ensure your `.env` file contains the correct `DB_USERNAME` and `DB_PASSWORD`.
 
 ---
 
-# Run Backend Server
+## Running the Application
 
-Development mode:
+Once dependencies are installed and the database is running, you can start the NestJS server.
 
+**Development Mode:**
 ```bash
 npm run start:dev
 ```
 
-Backend will run at:
-
-```
-http://localhost:3000
-```
-
----
-
-# Frontend Setup
-
-Navigate to frontend:
-
+**Production Mode:**
 ```bash
-cd medibook-frontend
+npm run build
+npm run start:prod
 ```
 
-Install dependencies:
-
+**Using Docker Compose (Full Stack):**
 ```bash
-npm install
+docker-compose up --build
 ```
 
-Run frontend:
-
-```bash
-npm run dev
-```
-
-Frontend will run at:
-
-```
-http://localhost:5173
-```
+The application will run on `http://localhost:3000`.
 
 ---
 
-# API Documentation (Swagger)
+## Running Migrations
 
-MediBook provides interactive Swagger documentation.
+This project uses TypeORM's `synchronize: true` setting in development (`src/app.module.ts`). This means the database schema is **automatically created and updated** when the application starts.
 
-Access:
+For production, you would typically turn off `synchronize` and use explicit migrations:
 
-```
-http://localhost:3000/api/docs
-```
+1. Generate a migration: `npx typeorm migration:generate -d path/to/datasource -n MigrationName`
+2. Run migrations: `npx typeorm migration:run -d path/to/datasource`
 
-Swagger allows you to:
-
-* Test API endpoints
-* View request/response formats
-* Authenticate using JWT
-* Manage services and bookings
+*Note: For the scope of this assessment, automatic synchronization is enabled.*
 
 ---
 
-# Authentication Testing
+## API Documentation
 
-## 1. Register Admin Account
+Interactive API documentation is provided via **Swagger**. 
 
-Endpoint:
+Once the application is running, navigate to:
+**[http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
 
-```
-POST /auth/register
-```
-
-Request:
-
-```json
-{
-  "email": "admin@gmail.com",
-  "password": "password123",
-  "name": "Admin User"
-}
-```
+From there, you can:
+- View all available endpoints and DTOs.
+- Register an account (`POST /auth/register`).
+- Log in to receive a JWT (`POST /auth/login`).
+- Click **"Authorize"** at the top right, and paste your JWT as `Bearer <your_token>` to access protected Service and Booking routes.
 
 ---
 
-## 2. Login
+## Assumptions Made
 
-Endpoint:
+During the development of this API, the following assumptions were made:
 
-```
-POST /auth/login
-```
-
-Request:
-
-```json
-{
-  "email": "admin@gmail.com",
-  "password": "password123"
-}
-```
-
-Response:
-
-```json
-{
-  "access_token": "JWT_TOKEN"
-}
-```
+1. **User Roles:** Anyone who registers via `/auth/register` is considered an administrator and has permission to manage (Create, Update, Delete) Services. 
+2. **Booking Access:** Booking appointments (`POST /bookings`) is a public route, allowing unauthenticated patients to book. 
+3. **Timezones:** Booking dates are assumed to be handled in the local timezone of the client, passed in `YYYY-MM-DD` format.
+4. **Data Soft-Deletes:** Services are hard-deleted, but bookings associated with a deleted service are cascaded (removed automatically).
 
 ---
 
-## 3. Authorize Swagger
+## Future Improvements
 
-1. Copy the JWT token
-2. Click the **Authorize 🔒** button
-3. Enter:
+If given more time, the following features and improvements would be implemented:
 
-```
-Bearer JWT_TOKEN
-```
-
-4. Click Authorize
-
-Protected endpoints can now be tested.
-
----
-
-# API Endpoints
-
-## Authentication
-
-| Method | Endpoint       | Description                |
-| ------ | -------------- | -------------------------- |
-| POST   | /auth/register | Create admin account       |
-| POST   | /auth/login    | Login and receive JWT      |
-| GET    | /auth/profile  | Get logged-in user profile |
-
----
-
-## Services
-
-| Method | Endpoint      | Description       |
-| ------ | ------------- | ----------------- |
-| POST   | /services     | Create service    |
-| GET    | /services     | Get all services  |
-| GET    | /services/:id | Get service by ID |
-| PATCH  | /services/:id | Update service    |
-| DELETE | /services/:id | Delete service    |
-
-Example service:
-
-```json
-{
-  "title": "General Doctor Consultation",
-  "description": "Consultation with a general physician",
-  "duration": 30,
-  "price": 2500,
-  "isActive": true
-}
-```
-
----
-
-## Bookings
-
-| Method | Endpoint             | Description           |
-| ------ | -------------------- | --------------------- |
-| POST   | /bookings            | Create booking        |
-| GET    | /bookings            | View all bookings     |
-| PATCH  | /bookings/:id/status | Update booking status |
-
-Booking status options:
-
-```
-PENDING
-CONFIRMED
-CANCELLED
-COMPLETED
-```
-
-Example:
-
-```json
-{
-  "customerName": "John Silva",
-  "customerEmail": "john@gmail.com",
-  "customerPhone": "0771234567",
-  "serviceId": "service_uuid",
-  "bookingDate": "2026-07-15",
-  "bookingTime": "10:30",
-  "notes": "First consultation"
-}
-```
-
----
-
-# Database Schema
-
-## Users Table
-
-```
-id
-email
-password
-name
-createdAt
-```
-
-## Services Table
-
-```
-id
-title
-description
-duration
-price
-isActive
-createdAt
-updatedAt
-```
-
-## Bookings Table
-
-```
-id
-customerName
-customerEmail
-customerPhone
-serviceId
-bookingDate
-bookingTime
-status
-notes
-createdAt
-updatedAt
-```
-
----
-
-# Future Improvements
-
-## Email and SMS Notifications
-
-Integrate services such as:
-
-* SendGrid
-* Twilio
-
-for:
-
-* Booking confirmations
-* Appointment reminders
-* Status updates
-
----
-
-## Advanced Appointment Scheduling
-
-Implement:
-
-* Doctor availability management
-* Time-slot allocation
-* Prevention of duplicate bookings
-
----
-
-## Role-Based Access Control
-
-Introduce roles such as:
-
-* Super Admin
-* Doctor
-* Receptionist
-
-with different dashboard permissions.
-
----
-
-## OAuth Authentication
-
-Add:
-
-* Google Login
-* Microsoft Login
-
-for easier staff onboarding.
-
----
-
-# Author
-
-Developed as a healthcare appointment management platform using modern full-stack technologies.
-
----
-
-# License
-
-This project is developed for educational and demonstration purposes.
+1. **Role-Based Access Control (RBAC):** Introduce distinct roles (`SuperAdmin`, `Doctor`, `Patient`) to restrict who can edit services versus who can only view their own bookings.
+2. **Email / SMS Notifications:** Integrate Twilio or SendGrid to notify patients when their booking status changes from `PENDING` to `CONFIRMED`.
+3. **Advanced Scheduling Rules:** Implement logic to factor in service duration, business hours, and doctor availability to strictly prevent double-booking.
+4. **Production Database Migrations:** Disable TypeORM `synchronize: true` and establish a strict migration pipeline for schema changes.
+5. **CI/CD Pipeline:** Add GitHub Actions for automated unit testing, linting, and Docker image publishing on every push.
