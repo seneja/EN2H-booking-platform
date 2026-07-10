@@ -2,27 +2,27 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 
 @Entity('services')
 export class Service {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column()
-  title: string;
+    @Column()
+    title: string;
 
-  @Column({ nullable: true })
-  description: string;
+    @Column({ nullable: true })
+    description: string;
 
-  @Column({ type: 'int' })
-  duration: number; // in minutes
+    @Column({ type: 'int' })
+    duration: number; // in minutes
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
-  price: number;
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    price: number;
 
-  @Column({ default: true })
-  isActive: boolean;
+    @Column({ default: true })
+    isActive: boolean;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+    @UpdateDateColumn()
+    updatedAt: Date;
 }
