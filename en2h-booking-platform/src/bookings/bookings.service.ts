@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Booking, BookingStatus } from './booking.entity';
@@ -22,6 +22,18 @@ export class BookingsService {
     });
     if (!serviceExists) {
       throw new NotFoundException(`Service with ID ${dto.serviceId} does not exist`);
+    }
+
+    // 2. Prevent duplicate bookings for the same service, date, and time (that are not cancelled)
+    const duplicate = await this.bookingsRepository.findOne({
+      where: [
+        { serviceId: dto.serviceId, bookingDate: dto.bookingDate, bookingTime: dto.bookingTime, status: BookingStatus.PENDING },
+        { serviceId: dto.serviceId, bookingDate: dto.bookingDate, bookingTime: dto.bookingTime, status: BookingStatus.CONFIRMED },
+        { serviceId: dto.serviceId, bookingDate: dto.bookingDate, bookingTime: dto.bookingTime, status: BookingStatus.COMPLETED },
+      ]
+    });
+    if (duplicate) {
+      throw new ConflictException('This time slot is already booked for this service');
     }
 
     // 2. Booking dates cannot be in the past (timezone-safe check)
