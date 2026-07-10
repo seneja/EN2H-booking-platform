@@ -10,7 +10,14 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string, includePassword = false): Promise<User | null> {
+    if (includePassword) {
+      return this.usersRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where('user.email = :email', { email })
+        .getOne();
+    }
     return this.usersRepository.findOne({ where: { email } });
   }
 
