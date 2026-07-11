@@ -25,7 +25,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
           }),
       autoLoadEntities: true,
       synchronize: true,
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+      ssl: { rejectUnauthorized: false },
     }),
     AuthModule,
     UsersModule,
