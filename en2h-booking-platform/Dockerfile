@@ -1,12 +1,12 @@
 # ---- Stage 1: Build ----
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 # Copy dependency files first for better layer caching
 COPY package*.json ./
 
-RUN npm install -g npm@latest && npm install
+RUN npm install
 
 # Copy source code and build
 COPY . .
@@ -14,14 +14,14 @@ COPY . .
 RUN npm run build
 
 # ---- Stage 2: Production ----
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 WORKDIR /app
 
 # Copy only the production dependencies and compiled output
 COPY package*.json ./
 
-RUN npm install -g npm@latest && npm install --omit=dev
+RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
