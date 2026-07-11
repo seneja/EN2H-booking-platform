@@ -44,7 +44,7 @@ export const BookingsPage = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await bookingsService.getAll();
+      const res = await bookingsService.getAll() as any;
       let data: Booking[] = [];
       if (res.data) {
         if (Array.isArray(res.data)) {

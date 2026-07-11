@@ -107,10 +107,10 @@ export const ServiceFormPage = () => {
       };
 
       if (isEdit) {
-        await servicesService.update(id!, payload);
+        await servicesService.update(id!, payload as any);
         addToast('success', 'Service updated successfully!');
       } else {
-        await servicesService.create(payload);
+        await servicesService.create(payload as any);
         addToast('success', 'Service created successfully!');
       }
       navigate('/admin/services');

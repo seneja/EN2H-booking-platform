@@ -56,11 +56,12 @@ export const DashboardPage = () => {
         ]);
         setStats(statsRes.data);
         let bData: Booking[] = [];
-        if (bookingsRes.data) {
-          if (Array.isArray(bookingsRes.data)) {
-            bData = bookingsRes.data;
-          } else if (bookingsRes.data.data && Array.isArray(bookingsRes.data.data)) {
-            bData = bookingsRes.data.data;
+        const bookingsData = bookingsRes as any;
+        if (bookingsData.data) {
+          if (Array.isArray(bookingsData.data)) {
+            bData = bookingsData.data;
+          } else if (bookingsData.data.data && Array.isArray(bookingsData.data.data)) {
+            bData = bookingsData.data.data;
           }
         }
         if (bData.length > 0) setRecentBookings(bData);
