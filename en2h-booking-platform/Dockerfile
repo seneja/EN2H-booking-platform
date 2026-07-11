@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy dependency files first for better layer caching
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install -g npm@latest && npm install
 
 # Copy source code and build
 COPY . .
@@ -21,7 +21,7 @@ WORKDIR /app
 # Copy only the production dependencies and compiled output
 COPY package*.json ./
 
-RUN npm ci --omit=dev
+RUN npm install -g npm@latest && npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
