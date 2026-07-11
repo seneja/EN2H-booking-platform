@@ -25,8 +25,8 @@ RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
-# Expose the API port (Back4App routes to 8080 by default)
-EXPOSE 8080
+# Expose the API port (Back4App health checker uses port 3000)
+EXPOSE 3000
 
 # Start the application
 CMD ["node", "dist/main"]
