@@ -76,6 +76,7 @@ describe('AuthService', () => {
         authService.register({
           email: 'test@example.com',
           password: 'password123',
+          name: 'Test User',
         }),
       ).rejects.toThrow(ConflictException);
     });

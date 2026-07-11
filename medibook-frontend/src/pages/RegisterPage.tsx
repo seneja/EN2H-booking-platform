@@ -4,18 +4,19 @@ import { useToast } from '../context/ToastContext';
 import { authService } from '../services/medibook.service';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/FormFields';
+import { Stethoscope, LogIn } from 'lucide-react';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
-  const [form, setForm] = useState({ email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.email || !form.password || !form.confirmPassword) {
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -30,7 +31,7 @@ export const RegisterPage = () => {
     setLoading(true);
     setError('');
     try {
-      await authService.register(form.email, form.password);
+      await authService.register(form.email, form.password, form.name);
       addToast('success', 'Account created successfully! Please sign in.');
       navigate('/login');
     } catch (err: any) {
@@ -46,21 +47,39 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#1E293B' }}>Create Account</h2>
-      {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center', fontSize: '14px' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)', padding: '20px' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '450px', padding: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '16px', background: 'var(--primary-50)', color: 'var(--primary)', marginBottom: '16px' }}>
+            <Stethoscope size={32} />
+          </div>
+          <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text)', marginBottom: '8px' }}>Create an Account</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Join MediBook to manage your appointments</p>
+        </div>
+
+        {error && (
+          <div style={{ padding: '12px 16px', backgroundColor: 'var(--danger-bg)', border: '1px solid var(--danger-border)', borderRadius: 'var(--radius-md)', color: 'var(--danger)', fontSize: '14px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Input
-            label="Email"
+            label="Full Name"
+            type="text"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            placeholder="Dr. Jane Doe"
+            required
+          />
+          <Input
+            label="Email Address"
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            placeholder="your-email@example.com"
+            placeholder="admin@medibook.com"
             required
           />
-        </div>
-        <div style={{ marginBottom: '15px' }}>
           <Input
             label="Password"
             type="password"
@@ -69,25 +88,27 @@ export const RegisterPage = () => {
             placeholder="At least 6 characters"
             required
           />
-        </div>
-        <div style={{ marginBottom: '20px' }}>
           <Input
             label="Confirm Password"
             type="password"
             value={form.confirmPassword}
             onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-            placeholder="Confirm password"
+            placeholder="Confirm your password"
             required
           />
+          
+          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px', padding: '12px' }} loading={loading}>
+            {loading ? 'Creating Account...' : 'Sign Up'}
+          </Button>
+        </form>
+
+        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: 'var(--text-secondary)' }}>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none' }}>
+            Sign in instead
+          </Link>
         </div>
-        <Button type="submit" variant="primary" style={{ width: '100%' }} loading={loading}>
-          {loading ? 'Creating Account...' : 'Create Account'}
-        </Button>
-      </form>
-      <div style={{ marginTop: '15px', textAlign: 'center' }}>
-        Already have an account? <Link to="/login" style={{ color: '#2563EB', textDecoration: 'none' }}>Sign in</Link>
       </div>
     </div>
   );
 };
-

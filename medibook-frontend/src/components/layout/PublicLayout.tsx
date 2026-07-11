@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
+import { Menu, X, Stethoscope } from 'lucide-react';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -18,7 +17,9 @@ export const PublicNavbar = () => {
     <nav className="public-nav">
       <div className="public-nav__inner container">
         <Link to="/" className="public-nav__logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img src={logoImg} alt="MediBook Logo" style={{ height: '40px', width: 'auto', borderRadius: '4px' }} />
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', borderRadius: '10px', background: 'var(--primary-50)', color: 'var(--primary)' }}>
+            <Stethoscope size={22} />
+          </div>
           <span>MediBook</span>
         </Link>
 
@@ -56,8 +57,10 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="container footer__inner">
           <div className="footer__brand">
             <div className="footer__logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <img src={logoImg} alt="MediBook Logo" style={{ height: '32px', width: 'auto', borderRadius: '4px' }} />
-              <span>MediBook</span>
+              <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-50)', color: 'var(--primary)' }}>
+                <Stethoscope size={20} />
+              </div>
+              <span style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text)' }}>MediBook</span>
             </div>
             <p className="footer__tagline">
               Your trusted healthcare appointment management platform.

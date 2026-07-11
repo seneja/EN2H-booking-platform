@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext';
 import { authService } from '../services/medibook.service';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/FormFields';
+import { Stethoscope, LogIn } from 'lucide-react';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -45,21 +46,31 @@ export const LoginPage = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#1E293B' }}>Sign In</h2>
-      {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center', fontSize: '14px' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg)', padding: '20px' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '420px', padding: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '16px', background: 'var(--primary-50)', color: 'var(--primary)', marginBottom: '16px' }}>
+            <Stethoscope size={32} />
+          </div>
+          <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text)', marginBottom: '8px' }}>Welcome Back</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Sign in to access your dashboard</p>
+        </div>
+
+        {error && (
+          <div style={{ padding: '12px 16px', backgroundColor: 'var(--danger-bg)', border: '1px solid var(--danger-border)', borderRadius: 'var(--radius-md)', color: 'var(--danger)', fontSize: '14px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Input
-            label="Email"
+            label="Email Address"
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder="admin@medibook.com"
             required
           />
-        </div>
-        <div style={{ marginBottom: '20px' }}>
           <Input
             label="Password"
             type="password"
@@ -68,16 +79,22 @@ export const LoginPage = () => {
             placeholder="Enter your password"
             required
           />
+          
+          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px', padding: '12px' }} loading={loading}>
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <LogIn size={18} />
+              {loading ? 'Signing in...' : 'Sign In'}
+            </span>
+          </Button>
+        </form>
+
+        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: 'var(--text-secondary)' }}>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none' }}>
+            Create one
+          </Link>
         </div>
-        <Button type="submit" variant="primary" style={{ width: '100%' }} loading={loading}>
-          {loading ? 'Signing in...' : 'Sign In'}
-        </Button>
-      </form>
-      <div style={{ marginTop: '15px', textAlign: 'center' }}>
-        Don't have an account? <Link to="/register" style={{ color: '#2563EB', textDecoration: 'none' }}>Create one</Link>
       </div>
     </div>
   );
 };
-
-
