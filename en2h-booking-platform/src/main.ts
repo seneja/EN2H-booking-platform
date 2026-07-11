@@ -3,6 +3,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
+import dns from 'dns';
+
+dns.setDefaultResultOrder('ipv4first');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
