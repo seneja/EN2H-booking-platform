@@ -10,24 +10,9 @@ dns.setDefaultResultOrder('ipv4first');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Set global API prefix, excluding the root path (so health check Hello World still works at '/')
-  app.setGlobalPrefix('api', { exclude: ['/'] });
-
-  // Enable CORS for development and production domains
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:3001',
-    'http://127.0.0.1:5173',
-    'https://en-2-h-booking-platform-cn4q-black.vercel.app',
-  ];
-
-  if (process.env.FRONTEND_URL) {
-    const urls = process.env.FRONTEND_URL.split(',').map((u) => u.trim());
-    allowedOrigins.push(...urls);
-  }
-
+  // Enable CORS dynamically for all origins (supports Vercel preview subdomains and localhost)
   app.enableCors({
-    origin: allowedOrigins,
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
