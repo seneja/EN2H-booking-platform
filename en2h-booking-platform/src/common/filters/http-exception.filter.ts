@@ -27,11 +27,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? exception.getResponse()
         : 'Internal server error';
 
-    // Log the exception stack/details
-    this.logger.error(
-      `HTTP Status: ${status} | Method: ${request.method} | URL: ${request.url}`,
-      exception instanceof Error ? exception.stack : JSON.stringify(exception),
-    );
+    // Log the exception details: log errors with stack trace for 500+, warnings without stack trace for 4xx (except /favicon.ico)
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.error(
+        `HTTP Status: ${status} | Method: ${request.method} | URL: ${request.url}`,
+        exception instanceof Error ? exception.stack : JSON.stringify(exception),
+      );
+    } else if (request.url !== '/favicon.ico') {
+      const logMessage =
+        typeof message === 'object' && message !== null
+          ? (message as any).message || JSON.stringify(message)
+          : message;
+      this.logger.warn(
+        `HTTP Status: ${status} | Method: ${request.method} | URL: ${request.url} | Message: ${logMessage}`,
+      );
+    }
 
     // Format error payload uniformly
     const errorResponse = {
