@@ -10,12 +10,11 @@ dns.setDefaultResultOrder('ipv4first');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS dynamically for all origins (supports Vercel preview subdomains and localhost)
+  // Enable CORS with wildcard origin (ensures Vercel subdomains are never blocked)
   app.enableCors({
-    origin: true,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
   });
 
   // Global validation pipe – strips unknown fields, auto-transforms types
@@ -48,7 +47,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, '0.0.0.0');
   console.log(`MediBook API running on http://localhost:${process.env.PORT || 3000}`);
   console.log(`Swagger Documentation available at http://localhost:${process.env.PORT || 3000}/api/docs`);
 }
