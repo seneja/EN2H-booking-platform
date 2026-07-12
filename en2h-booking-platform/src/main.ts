@@ -10,9 +10,10 @@ dns.setDefaultResultOrder('ipv4first');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS with wildcard origin (ensures Vercel subdomains are never blocked)
+  // Enable CORS – allow all known frontend origins with credentials support
   app.enableCors({
-    origin: '*',
+    origin: true, // reflects the request origin back, equivalent to wildcard but supports credentials
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
